@@ -91,11 +91,11 @@ typedef struct Triple{
 
 bool equals(std::shared_ptr<TreeNode> a, std::shared_ptr<TreeNode> b);
 std::shared_ptr<TreeNode> get_brother(std::shared_ptr<TreeNode> root);
+bool onSegment(const Point &p, const LineSegment &ls);
 double manhattanDistance(Point p1, Point p2);
 bool doubleEquals(double a, double b);
 bool project_point_on_line_segment(Point p, LineSegment ls, Point &projection);
 double cal_dis(std::shared_ptr<Triple> pair);
 double minDistanceToSegment(const Point &p, const LineSegment &ls);
-bool onSegment(const Point &p, const LineSegment &ls);
 double minDistanceBetweenSegments(const LineSegment &ls1, const LineSegment &ls2);
 #endif //ZST_DME_UTIL_H

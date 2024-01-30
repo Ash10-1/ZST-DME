@@ -11,7 +11,6 @@
 #include "util.h" //注意文件位置
 #include "trr.h"
 #include "toptodown.h"
-#include "netlist.h"
 #include "TopoOperation.h"
 #include "Test.h"
 
@@ -94,7 +93,7 @@ std::shared_ptr<TreeNode> tree_build(std::vector<Point> &sink_set, std::vector<d
         auto ptr = std::make_shared<TreeNode>();
         ptr->p = Point (sink.x,sink.y);
         ptr->capacitance = *caps_iter;
-        //放置内存溢出
+        //防止内存溢出
         assert(caps_iter != caps.end());
         ++caps_iter;
         recur_array.push_back(ptr);

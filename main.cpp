@@ -1,8 +1,7 @@
 #include <iostream>
 #include "util.h"
-#include "reader.h"
+#include "FileOperation.h"
 #include "topoparser.h"
-#include "netlist.h"
 #include "vector"
 
 const char* benchmark_file_path = "F:\\C++Project\\ZST_DME-master\\benchmark\\r1.txt"; //todo benchmark.txt文件的绝对路径
@@ -17,7 +16,8 @@ int main() {
      * benchmark 文件读取解析，获取 2 * numpins 的二维数组，存储所有点的坐标
      */
     std::vector<double> caps;
-    std::vector<Point> sink_set = read(benchmark_file_path,caps);
+    FileOperation fileOperation;
+    std::vector<Point> sink_set = fileOperation.read(benchmark_file_path,caps);
     printf("The total number of pins: %d\n", numpins);
 
     for(int i = 0; i< numpins; i++){
@@ -34,7 +34,7 @@ int main() {
     /**
      * 生成网表文件
      */
-    generate_netlist(netlist_file_path, tree);
+    fileOperation.generate_netlist(netlist_file_path, tree);
 
 
 

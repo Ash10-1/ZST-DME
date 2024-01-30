@@ -5,7 +5,7 @@
 #ifndef ZST_DME_ELMOREDELAY_H
 #define ZST_DME_ELMOREDELAY_H
 #include "util.h"
-#include "reader.h"
+#include "FileOperation.h"
 
 class ElmoreDelay {
 private:

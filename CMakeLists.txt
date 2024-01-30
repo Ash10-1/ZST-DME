@@ -8,10 +8,6 @@ add_executable(ZST_DME main.cpp
         util.h
         topoparser.cpp
         topoparser.h
-        reader.cpp
-        reader.h
-        netlist.cpp
-        netlist.h
         trr.h
         trr.cpp
         toptodown.cpp
@@ -22,4 +18,8 @@ add_executable(ZST_DME main.cpp
         TopoOperation.h
         Test.cpp
         Test.h
+        Clock.cpp
+        Clock.h
+        FileOperation.cpp
+        FileOperation.h
 )
