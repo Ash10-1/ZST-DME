@@ -5,9 +5,11 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+
 #include "TopoOperation.h"
+
 // Function to read coordinates from a line
-bool readCoordinates(const std::string& line, double& x, double& y) {
+bool TopoOperation ::readCoordinates(const std::string& line, double& x, double& y) {
     if (line.find("Coordinate :") != std::string::npos) {
         std::istringstream iss(line);
         std::string temp;
@@ -18,7 +20,7 @@ bool readCoordinates(const std::string& line, double& x, double& y) {
 }
 
 // Function to read capacitance from a line
-bool readCapacitance(const std::string& line, double& cap) {
+bool TopoOperation :: readCapacitance(const std::string& line, double& cap) {
     if (line.find("Capacitive Load :") != std::string::npos) {
         std::istringstream iss(line);
         std::string temp;
@@ -27,7 +29,51 @@ bool readCapacitance(const std::string& line, double& cap) {
     }
     return false;
 }
-void TopoOperation::read(const std::string file_path, std::vector<std::shared_ptr<Triple>> &path) {
+// 从文件中读取node_id
+int TopoOperation :: readNodeId(const std::string& line) {
+    int node_id;
+    if (line.find("node_id :") != std::string::npos) {
+        std::istringstream iss(line);
+        std::string temp;
+        iss >> temp >> temp >> node_id;
+        return node_id;
+    }
+    return -1;
+}
+void TopoOperation::readNode(std::ifstream &file,
+                             std::unordered_map<int, std::shared_ptr<TreeNode>> &node_map,
+                             std::shared_ptr<TreeNode>& node,
+                             std::string line) {
+    std::getline(file, line);
+    int node_id = readNodeId(line);
+    if (node_id != -1) {
+        if (node_map.find(node_id) != node_map.end()) {
+            node = node_map[node_id];
+            // Skip the next two lines
+            std::getline(file, line);
+            std::getline(file, line);
+        }
+        else {
+            node->node_id = node_id;
+            std::getline(file, line);
+            double x, y;
+            readCoordinates(line, x, y);
+            node->p = {x, y};
+            std::getline(file, line);
+            double cap;
+            readCapacitance(line, cap);
+            node->capacitance = cap;
+            node_map[node_id] = node;
+        }
+    }
+    else {
+        throw std::runtime_error("Unable to read node id");
+    }
+
+}
+void TopoOperation::read(const std::string file_path,
+                         std::vector<std::shared_ptr<Triple>> &path) {
+    std::unordered_map<int , std::shared_ptr<TreeNode>> node_map;
     // 创建一个ifstream对象用于读取文件
     std::ifstream file(file_path);
     // 检查文件是否成功打开
@@ -48,45 +94,19 @@ void TopoOperation::read(const std::string file_path, std::vector<std::shared_pt
     }
     path.reserve(size);//为path分配足够多的空间
 
-    while (std::getline(file, line)) {
+    for (int i = 0; i < size; ++i) {
         auto triple = std::make_shared<Triple>();
         auto left_node = std::make_shared<TreeNode>();
         auto right_node = std::make_shared<TreeNode>();
         auto merge_node = std::make_shared<TreeNode>();
-
+        // 读取左右节点
+        readNode(file, node_map, left_node, line);
+        readNode(file, node_map, right_node, line);
+        readNode(file, node_map, merge_node, line);
+        // Set triple
         triple->leftnode = left_node;
         triple->rightnode = right_node;
         triple->mergenode = merge_node;
-
-        double x, y, cap;
-
-        // Left node
-        readCoordinates(line, x, y);
-        std::getline(file, line);
-        readCapacitance(line, cap);
-        left_node->p = {x, y};
-        left_node->capacitance = cap;
-
-        // Right node
-        std::getline(file, line);
-        readCoordinates(line, x, y);
-        std::getline(file, line);
-        readCapacitance(line, cap);
-        right_node->p = {x, y};
-        right_node->capacitance = cap;
-
-        // Merge node
-        std::getline(file, line);
-        readCoordinates(line, x, y);
-        std::getline(file, line);
-        readCapacitance(line, cap);
-        merge_node->p = {x, y};
-        merge_node->ms_end = {0, 0};
-        merge_node->type = true;
-        merge_node->delay = 0;
-        merge_node->radius = -1;
-        merge_node->capacitance = 0; // No need to read from file as it's set to 0
-
         // Set child and parent relationships
         merge_node->left_child = left_node;
         merge_node->right_child = right_node;
@@ -111,14 +131,20 @@ void TopoOperation::write(const std::string file_path, std::vector<std::shared_p
     outfile << "size : " << size << std::endl;
     for(const auto& triple : path){
         std::shared_ptr<TreeNode> n1 = triple->leftnode;
+        outfile << "node_id : " << n1->node_id << std::endl;
         outfile << "Coordinate : " << n1->p.x << " " << n1->p.y << std::endl;
         outfile << "Capacitive Load : " << n1->capacitance << std::endl;
+
         n1 = triple->rightnode;
+        outfile << "node_id : " << n1->node_id << std::endl;
         outfile << "Coordinate : " << n1->p.x << " " << n1->p.y << std::endl;
         outfile << "Capacitive Load : " << n1->capacitance << std::endl;
+
         n1 = triple->mergenode;
+        outfile << "node_id : " << n1->node_id << std::endl;
         outfile << "Coordinate : " << n1->p.x << " " << n1->p.y << std::endl;
         outfile << "Capacitive Load : " << n1->capacitance << std::endl;
+
     }
     // 写入文件
 

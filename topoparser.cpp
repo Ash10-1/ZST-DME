@@ -12,7 +12,7 @@
 #include "trr.h"
 #include "toptodown.h"
 #include "TopoOperation.h"
-#include "Test.h"
+
 
 /**
 *计算两点间曼哈顿距离
@@ -87,12 +87,13 @@ std::shared_ptr<TreeNode> tree_build(std::vector<Point> &sink_set, std::vector<d
     std::vector<std::shared_ptr<TreeNode>> recur_array;
     std::vector<std::shared_ptr<Triple>> path;
     auto caps_iter = caps.begin();
-
+    int id = 0;
     for (const auto &sink: sink_set){
         //初始化每个sink node节点
         auto ptr = std::make_shared<TreeNode>();
         ptr->p = Point (sink.x,sink.y);
         ptr->capacitance = *caps_iter;
+        ptr->node_id = id++;
         //防止内存溢出
         assert(caps_iter != caps.end());
         ++caps_iter;
@@ -114,7 +115,7 @@ std::shared_ptr<TreeNode> tree_build(std::vector<Point> &sink_set, std::vector<d
         mergeNode->right_child=result[1];
         mergeNode->left_child->father = mergeNode;
         mergeNode->right_child->father = mergeNode;
-
+        mergeNode->node_id = id++;
         //建立Triple并填入路径数组
         std::shared_ptr<Triple> triple = std::make_shared<Triple>();
         triple -> leftnode = result[0];
@@ -137,8 +138,8 @@ std::shared_ptr<TreeNode> tree_build(std::vector<Point> &sink_set, std::vector<d
     TopoOperation op;
     op.write(topo_path, path);
     op.read(topo_path, path1);
-    Test test;
-    test.testFile(path, path1);
+//    Test test;
+//    test.testFile(path, path1);
     for (int i = 0; i < path.size(); ++i){
         //计算合并线段
         std::shared_ptr<Triple> pair = path[i];

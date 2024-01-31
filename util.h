@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <memory>
 #include <iostream>
+#include <unordered_map>
 
 typedef struct Point {
     double x, y;
@@ -37,6 +38,7 @@ typedef struct Trr{
     Point left;
 }Trr;
 typedef struct TreeNode{
+    int node_id;
     Point p;//如果该节点为ms的话，p则为ms的起始节点
     Point ms_end;
     double radius;

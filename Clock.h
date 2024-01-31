@@ -14,9 +14,6 @@ class Clock {
     public:
         std::vector<std::shared_ptr<TreeNode>> sink_set;
 
-
-
-
 };
 
 
