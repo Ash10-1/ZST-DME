@@ -9,8 +9,6 @@ FetchContent_MakeAvailable(json)
 add_executable(ZST_DME main.cpp
         util.cpp
         util.h
-        topoparser.cpp
-        topoparser.h
         trr.h
         trr.cpp
         toptodown.cpp

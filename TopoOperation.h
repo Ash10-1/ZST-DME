@@ -12,6 +12,7 @@
 class TopoOperation {
 public:
         void topoGenerate(std::vector<std::shared_ptr<Triple>> &path, std::string topo_path, std::string bench_path);
+        
         void write(const std::string file_path,std::vector<std::shared_ptr<Triple>> &path);
         void read(const std::string file_path, std::vector<std::shared_ptr<Triple>> &path);
 private:

@@ -5,7 +5,6 @@
 #ifndef ZST_DME_TRR_H
 #define ZST_DME_TRR_H
 
-#include "topoparser.h"
 #include "util.h"
 #include "ElmoreDelay.h"
 

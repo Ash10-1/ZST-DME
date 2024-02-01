@@ -13,7 +13,25 @@ using json = nlohmann::json;
 int numpins;
 double per_unit_resistance;
 double per_unit_capacitance;
+void FileOperation::init() {
+    // Read the json file
+    std::ifstream configFile("F:\\git Project\\ZST-DME\\config.json");
+    if (!configFile.is_open()) {
+        throw std::runtime_error("Unable to open config.json");
+    }
+    // Parse the json file
+    json configJson;
+    //Read the file into configJson
+    configFile >> configJson;
+    // Access the configuration values
+    // Example: std::string serverAddress = configJson["server"]["address"];
+    per_unit_capacitance = configJson["clock"]["per_unit_capacitance"];
+    per_unit_resistance = configJson["clock"]["per_unit_resistance"];
 
+    // Close the file
+    configFile.close();
+
+}
 // 使用 std::vector<Point> 来替代二维数组
 std::vector<Point> FileOperation:: read(const std::string& filename, std::vector<double>& caps) {
     std::ifstream file(filename);

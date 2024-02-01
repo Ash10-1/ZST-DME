@@ -11,8 +11,8 @@
 #include "util.h"
 
 class Clock {
-    public:
-        std::vector<std::shared_ptr<TreeNode>> sink_set;
+public:
+    std::shared_ptr<TreeNode> tree_build(std::string bench_path, const std::string topo_path);
 
 };
 
