@@ -5,6 +5,11 @@
 #include <fstream>
 #include <sstream>
 #include "FileOperation.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include <iostream>
+// Use the nlohmann json namespace
+using json = nlohmann::json;
 int numpins;
 double per_unit_resistance;
 double per_unit_capacitance;

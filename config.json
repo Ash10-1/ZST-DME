@@ -1,0 +1,6 @@
+{
+  "clock": {
+    "per_unit_resistance": 0.003000 ,
+    "per_unit_capacitance":2.000000e-17
+  }
+}

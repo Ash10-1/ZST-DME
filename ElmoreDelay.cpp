@@ -5,6 +5,7 @@
 #include <iostream>
 #include "ElmoreDelay.h"
 #include "cmath"
+#include "FileOperation.h"
 /**
 *计算以该节点为根的子树的电容
 *@param node 左节点指针
@@ -78,8 +79,8 @@ double ElmoreDelay::calTrrRadius(std::shared_ptr<TreeNode> node_a, std::shared_p
     double t2 = calNodeDelay(node_b);
     node_a->delay = t1;
     node_b->delay = t2;
-//    std::cout << per_unit_resistance << "   ";
-//    std::cout << per_unit_capacitance;
+    std::cout << per_unit_resistance << "   ";
+    std::cout << per_unit_capacitance;
     double trra = (t2 - t1) + per_unit_resistance * dis * (c2 + 0.5 * per_unit_capacitance * dis);
     trra /= (per_unit_resistance * (c1 + c2 + per_unit_capacitance * dis));
     return trra;

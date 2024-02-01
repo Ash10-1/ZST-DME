@@ -16,6 +16,7 @@ public:
     std::vector<Point> read(const std::string& filename, std::vector<double>& caps);
     void generate_netlist(const char* filename, std::shared_ptr<TreeNode> root);
     void generate_netlist_op(FILE* file, std::shared_ptr<TreeNode> node);
+    void init();
 };
 
 
